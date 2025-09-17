@@ -41,7 +41,6 @@ hiragana_to_romaji = {
     'じゃ': 'ja', 'じゅ': 'ju', 'じょ': 'jo',
     'びゃ': 'bya', 'びゅ': 'byu', 'びょ': 'byo',
     'ぴゃ': 'pya', 'ぴゅ': 'pyu', 'ぴょ': 'pyo',
-    # Add more if needed, e.g., for small tsu 'っ': ' '
 }
 
 # Process each subdirectory
@@ -59,7 +58,6 @@ for subdir in subdirs:
         print(f"Processing: {file_path.name}")
         
         # Extract the hiragana from the filename, e.g., from "kana_1(あ)(ア).mp3" get "あ"
-        # Note: Adjust regex if there's a space before parentheses
         match = re.search(r'\((\S+)\)\(\S+\)', file_path.name)
         if match:
             hiragana = match.group(1).strip()
@@ -68,9 +66,12 @@ for subdir in subdirs:
             if romaji:
                 # Get the original stem without the (hiragana)(katakana)
                 original_stem = re.sub(r'\(\S+\)\(\S+\)$', '', file_path.stem)
+                # Replace space with nothing or underscore if desired
+                original_stem = original_stem.replace(' ', '')  # Removes space
+                # original_stem = original_stem.replace(' ', '_')  # Use underscore instead
                 
                 # New name: append _romaji
-                new_stem = f"{original_stem}_{romaji}"
+                new_stem = f"{original_stem}{romaji}"
                 new_name = f"{new_stem}.mp3"
                 new_path = file_path.with_name(new_name)
                 
